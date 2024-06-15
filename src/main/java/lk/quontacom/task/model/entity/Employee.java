@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -25,11 +26,11 @@ public class Employee extends AbstractEntity{
     @Column(nullable = false, length = 100)
     private String last_name;
     @Column(nullable = false)
-    private Date birthday;
+    private LocalDateTime birthday;
     @Column(nullable = false)
-    private Date hired_date;
+    private LocalDateTime hired_date;
     @Column(nullable = false)
-    private int current_age_in_days;
+    private long current_age_in_days;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;

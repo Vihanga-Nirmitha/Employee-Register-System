@@ -13,8 +13,8 @@ public class EmployeeRespDto {
     private String first_name;
     private String last_name;
     private String gender;
-    private Date birthday;
-    private  Date hired_date;
+    private String birthday;
+    private  String hired_date;
     private String current_age_in_days;
     private String user_id;
 }

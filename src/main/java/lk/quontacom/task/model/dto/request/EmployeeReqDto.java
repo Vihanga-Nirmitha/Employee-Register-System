@@ -21,10 +21,10 @@ public class EmployeeReqDto {
         private String gender;
         @NotNull(message = "birthday is mandatory")
         @DateTimeFormat
-        private Date birthday;
+        private String birthday;
         @NotNull(message = "hired day is mandatory")
         @DateTimeFormat
-        private  Date hired_date;
+        private  String hired_date;
         @NotNull(message = "user is mandatory")
         private String user_id;
 }
