@@ -198,8 +198,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public byte[] downloadProfilePic(String id) {
-        return new byte[0];
+    public byte[] downloadProfilePic(String id) throws ERSException {
+        Path filePath = Paths.get(this.uploadDir).resolve(id);
+        if(employeeRepository.existsById(id)){
+        try {
+            byte[] fileContent = Files.readAllBytes(filePath);
+            String mimeType = Files.probeContentType(filePath);
+
+            return fileContent;
+        } catch (IOException ex) {
+            throw new ERSException(HttpStatus.BAD_REQUEST,
+                    "Profile picture does not exist with the user id", "Profile picture  does not exist with the user id:" +id);
+        }
+
+        }else {
+            throw new ERSException(HttpStatus.BAD_REQUEST,
+                    "Employee does not exist with the user id", "Employee does not exist with the user id:" +id);
+        }
     }
 
 

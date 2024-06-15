@@ -15,5 +15,5 @@ public interface EmployeeService {
     EmployeeRespDto editEmployeeById(String employeeId , EmployeeReqDto employeeReqDto) throws ERSException;
 
     String uploadProfilePic(String id, MultipartFile file) throws ERSException;
-    byte[] downloadProfilePic(String id);
+    byte[] downloadProfilePic(String id) throws ERSException;
 }

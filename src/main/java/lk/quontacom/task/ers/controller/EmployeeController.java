@@ -62,7 +62,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.uploadProfilePic(employeeId,file),HttpStatus.CREATED) ;
     }
     @GetMapping("/{id}/downloadProfilePicture")
-    public ResponseEntity<byte[]> downloadProfilePic(@PathVariable("id") String employeeId){
+    public ResponseEntity<byte[]> downloadProfilePic(@PathVariable("id") String employeeId) throws ERSException {
         return new ResponseEntity<>(employeeService.downloadProfilePic(employeeId),HttpStatus.OK);
     }
 
