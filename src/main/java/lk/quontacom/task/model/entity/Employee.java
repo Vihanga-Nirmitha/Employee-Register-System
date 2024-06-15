@@ -2,6 +2,7 @@ package lk.quontacom.task.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lk.quontacom.task.util.enums.Gender;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,9 @@ public class Employee extends AbstractEntity{
     private Date hired_date;
     @Column(nullable = false)
     private int current_age_in_days;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Gender gender;
 
     @ManyToOne
     @JsonBackReference

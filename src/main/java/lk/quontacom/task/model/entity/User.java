@@ -2,6 +2,7 @@ package lk.quontacom.task.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lk.quontacom.task.util.enums.RoleType;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,11 @@ public class User extends AbstractEntity{
     private String email;
     @Column(nullable = false, length = 100)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RoleType role_type;
+
     @ManyToOne
     @JsonBackReference
     private  Role role_id;
