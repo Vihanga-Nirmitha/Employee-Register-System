@@ -22,6 +22,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final UserRepository userRepository;
+
     private final RoleRepository roleRepository;
 private final CommonUtil commonUtil;
 
@@ -69,5 +70,8 @@ private final CommonUtil commonUtil;
         }
 
 
+    }  public String extractUserEmailFromToken(String token) {
+        return jwtService.getUserEmail(token);
     }
+
 }

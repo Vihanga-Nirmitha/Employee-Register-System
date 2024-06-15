@@ -5,6 +5,7 @@ import lk.quontacom.task.ers.model.dto.request.EmployeeReqDto;
 import lk.quontacom.task.ers.service.EmployeeService;
 import lk.quontacom.task.ers.exception.ERSException;
 import lk.quontacom.task.ers.model.dto.response.EmployeeRespDto;
+import lk.quontacom.task.ers.service.authentication.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,9 +20,11 @@ import java.util.List;
 @Slf4j
 public class EmployeeController {
     private final EmployeeService employeeService;
+    private final AuthService authService;
     @Autowired
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService, AuthService authService) {
         this.employeeService = employeeService;
+        this.authService = authService;
     }
     @PostMapping
     public ResponseEntity<Void> createEmployee(@RequestBody @Valid EmployeeReqDto employeeReqDto) throws ERSException{
@@ -43,9 +46,10 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.getAllEmployees(),HttpStatus.OK);
     }
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> deleteEmployeeById(@PathVariable("id") String employeeId) throws ERSException{
+    public ResponseEntity<Void> deleteEmployeeById(@PathVariable("id") String employeeId ,@RequestBody String token) throws ERSException{
         log.info("Received request to Delete Employee: "+employeeId);
-        employeeService.deleteEmployeeById(employeeId);
+
+        employeeService.deleteEmployeeById(employeeId,authService.extractUserEmailFromToken(token));
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
     @PutMapping(path = "/{id}")

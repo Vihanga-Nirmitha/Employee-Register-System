@@ -44,12 +44,25 @@ public class JwtService {
     }
 
     private Claims getAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            // Clean up token: Remove double quotes and trim whitespace
+            token = cleanToken(token);
+            return Jwts.parserBuilder()
+                    .setSigningKey(Decoders.BASE64URL.decode(SECRET_KEY))
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse JWT: " + e.getMessage(), e);
+        }
     }
+    private String cleanToken(String token) {
+        if (token == null) {
+            throw new IllegalArgumentException("Token cannot be null");
+        }
+        return token.replace("\"", "").trim();
+    }
+
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);

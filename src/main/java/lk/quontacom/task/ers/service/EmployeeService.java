@@ -11,7 +11,7 @@ public interface EmployeeService {
     void createEmployee(EmployeeReqDto employeeReqDto) throws ERSException;
     List<EmployeeRespDto> getAllEmployees();
     EmployeeRespDto getEmployeeById(String employeeId) throws ERSException;
-    void deleteEmployeeById(String employeeId) throws ERSException;
+    void deleteEmployeeById(String employeeId,String email) throws ERSException;
     EmployeeRespDto editEmployeeById(String employeeId , EmployeeReqDto employeeReqDto) throws ERSException;
 
     String uploadProfilePic(String id, MultipartFile file) throws ERSException;

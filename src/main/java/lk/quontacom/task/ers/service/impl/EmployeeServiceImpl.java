@@ -10,6 +10,7 @@ import lk.quontacom.task.ers.model.entity.Employee;
 import lk.quontacom.task.ers.model.entity.User;
 import lk.quontacom.task.ers.service.EmployeeService;
 import lk.quontacom.task.ers.service.UserService;
+import lk.quontacom.task.ers.util.enums.RoleType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -97,19 +98,25 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void deleteEmployeeById(String employeeId) throws ERSException {
+    public void deleteEmployeeById(String employeeId,String email) throws ERSException {
         log.debug("deleteEmployeeById method started");
-        if(employeeRepository.existsById(employeeId)){
-            Optional<Employee> employee = employeeRepository.findById(employeeId);
-            employee.get().setDeleted(true);
-            employeeRepository.save(employee.get());
-            log.info("Successfully deleted the Employee");
+        if(userRepository.findByEmail(email).getRole().getRole() == RoleType.ADMIN){
+            if(employeeRepository.existsById(employeeId)){
+                Optional<Employee> employee = employeeRepository.findById(employeeId);
+                employee.get().setDeleted(true);
+                employeeRepository.save(employee.get());
+                log.info("Successfully deleted the Employee");
 
 
+            }else {
+                throw new ERSException(HttpStatus.BAD_REQUEST,
+                        "Employee does not exist with the user id", "Employee does not exist with the user id:" +employeeId);
+            }
         }else {
             throw new ERSException(HttpStatus.BAD_REQUEST,
-                    "Employee does not exist with the user id", "Employee does not exist with the user id:" +employeeId);
+                    "Only admin can delete a user", "Only admin can delete a user ");
         }
+
 
     }
 
