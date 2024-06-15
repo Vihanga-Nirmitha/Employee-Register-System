@@ -2,9 +2,12 @@ package lk.quontacom.task.ers.controller;
 
 import jakarta.validation.Valid;
 import lk.quontacom.task.ers.exception.ERSException;
+import lk.quontacom.task.ers.model.dto.request.AuthReq;
 import lk.quontacom.task.ers.model.dto.request.UserReqDto;
+import lk.quontacom.task.ers.model.dto.response.AuthResp;
 import lk.quontacom.task.ers.model.dto.response.UserRespDto;
 import lk.quontacom.task.ers.service.UserService;
+import lk.quontacom.task.ers.service.authentication.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,15 +22,23 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private  final AuthService authService;
 @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthService authService) {
         this.userService = userService;
-    }
+    this.authService = authService;
+}
     @PostMapping
-    public ResponseEntity<Void> createUser(@RequestBody @Valid UserReqDto userReqDto) throws ERSException {
+    public ResponseEntity<Void> register(@RequestBody @Valid UserReqDto userReqDto) throws ERSException {
         log.info("Received request to create User");
         userService.createUser(userReqDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthResp> authenticate(@RequestBody AuthReq authReq){
+        return new ResponseEntity<>(authService.authentication(authReq), HttpStatus.OK);
     }
     @GetMapping(path = "/{id}")
     public ResponseEntity<UserRespDto> getAllUsersById(@PathVariable("id") String userId) throws ERSException{
