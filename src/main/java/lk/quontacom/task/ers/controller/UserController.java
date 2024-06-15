@@ -29,15 +29,14 @@ public class UserController {
     this.authService = authService;
 }
     @PostMapping
-    public ResponseEntity<Void> register(@RequestBody @Valid UserReqDto userReqDto) throws ERSException {
+    public ResponseEntity<AuthResp> register(@RequestBody @Valid UserReqDto userReqDto) throws ERSException {
         log.info("Received request to create User");
-        userService.createUser(userReqDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(authService.register(userReqDto),HttpStatus.CREATED);
     }
 
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthResp> authenticate(@RequestBody AuthReq authReq){
+    @PostMapping("/login")
+    public ResponseEntity<AuthResp> authenticate(@RequestBody AuthReq authReq) throws ERSException {
         return new ResponseEntity<>(authService.authentication(authReq), HttpStatus.OK);
     }
     @GetMapping(path = "/{id}")
