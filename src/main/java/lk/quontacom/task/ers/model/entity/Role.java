@@ -16,7 +16,6 @@ import java.util.List;
 
 public class Role extends AbstractEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -24,6 +23,8 @@ public class Role extends AbstractEntity {
     @OneToMany(mappedBy = "role")
     private List<User> users;
 
-
-
+    public Role(Long id, RoleType role) {
+        this.id = id;
+        this.role = role;
+    }
 }
