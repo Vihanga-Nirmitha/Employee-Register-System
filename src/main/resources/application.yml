@@ -1,0 +1,42 @@
+server:
+  port: 8080
+  tomcat:
+    threads:
+      max: 200
+  servlet:
+    context-path: /quontacom-backend-task
+base-url:
+  context: /Employee_Register_system
+app:
+  host: localhost:8080
+
+
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+  sleuth:
+    sampler.probability: 1
+  datasource:
+    url: jdbc:mysql://localhost:3306/ers
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      show-sql: false
+      open-in-view: false
+    mvc:
+      pathmatch:
+        matching-strategy: ant_path_matcher
+
+logging:
+  level:
+    org.springframework.web.filter.CommonRequestLoggingFilter: DEBUG
+    lk.quontaco.test: DEBUG
+
+time-zone: Asia/Colombo
