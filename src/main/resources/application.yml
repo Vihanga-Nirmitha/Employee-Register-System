@@ -9,7 +9,8 @@ base-url:
   context: /employee_register_system
 app:
   host: localhost:8080
-
+file:
+  upload-dir: uploads/
 
 spring:
   output:

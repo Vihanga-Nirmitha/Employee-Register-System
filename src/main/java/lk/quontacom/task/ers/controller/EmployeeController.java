@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -50,8 +51,19 @@ public class EmployeeController {
     @PutMapping(path = "/{id}")
     public ResponseEntity<EmployeeRespDto> editEmployee(@PathVariable("id") String employeeId, @RequestBody @Valid  EmployeeReqDto employeeReqDto) throws ERSException{
         log.info("Received request to Edit Employee" + employeeId);
-        employeeService.editEmployeeById(employeeId,employeeReqDto);
-        return new ResponseEntity<EmployeeRespDto>(HttpStatus.CREATED);
+
+        return new ResponseEntity<>(employeeService.editEmployeeById(employeeId,employeeReqDto),HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{id}/uploadProfilePicture")
+    public ResponseEntity<String> uploadProfilePic(@PathVariable("id") String employeeId,
+                                                   @RequestParam("file") MultipartFile file) throws ERSException {
+        log.info("Received request to uploadProfilePic" + employeeId);
+        return new ResponseEntity<>(employeeService.uploadProfilePic(employeeId,file),HttpStatus.CREATED) ;
+    }
+    @GetMapping("/{id}/downloadProfilePicture")
+    public ResponseEntity<byte[]> downloadProfilePic(@PathVariable("id") String employeeId){
+        return new ResponseEntity<>(employeeService.downloadProfilePic(employeeId),HttpStatus.OK);
     }
 
 

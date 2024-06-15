@@ -12,11 +12,18 @@ import lk.quontacom.task.ers.service.EmployeeService;
 import lk.quontacom.task.ers.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -26,7 +33,8 @@ import java.util.Optional;
 @Slf4j
 @EnableScheduling
 public class EmployeeServiceImpl implements EmployeeService {
-
+@Value("${file.upload-dir}")
+    private  String uploadDir;
         private final EmployeeRepository employeeRepository;
         private final UserRepository userRepository;
         private  final UserService userService;
@@ -153,6 +161,45 @@ public class EmployeeServiceImpl implements EmployeeService {
                ,commonUtil.convertgenderToString(employee.getGender()), commonUtil.convertDateTimeToString(employee.getBirthday()),commonUtil.convertDateTimeToString(employee.getHired_date()),
                 String.valueOf(employee.getCurrent_age_in_days()),String.valueOf(employee.getUser().getId()));
 
+    }
+    @Override
+    public String uploadProfilePic(String id, MultipartFile file) throws ERSException {
+        if(employeeRepository.existsById(id)){
+            try {
+
+                Path uploadPath = Paths.get(this.uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                String filename = id;
+                Path filePath = uploadPath.resolve(filename);
+                if(!Files.exists(filePath)){
+                    Files.copy(file.getInputStream(), filePath);
+                    log.info("Successfully uploaded employees profile picture : ",id);
+                }else {
+                    Path temp = filePath;
+                    Files.delete(temp);
+                    Files.copy(file.getInputStream(),filePath);
+                    log.info("Successfully replaced employees profile picture : ",id);
+
+                }
+
+                return filename;
+            } catch (IOException ex) {
+                throw new RuntimeException("Failed to store file. Error: " + ex.getMessage());
+            }
+        }else {
+            throw new ERSException(HttpStatus.BAD_REQUEST,
+                    "Employee does not exist with the user id", "Employee does not exist with the user id:" +id);
+        }
+
+    }
+
+
+    @Override
+    public byte[] downloadProfilePic(String id) {
+        return new byte[0];
     }
 
 

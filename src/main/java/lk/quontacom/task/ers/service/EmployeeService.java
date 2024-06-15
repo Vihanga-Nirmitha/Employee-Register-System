@@ -3,6 +3,7 @@ package lk.quontacom.task.ers.service;
 import lk.quontacom.task.ers.model.dto.request.EmployeeReqDto;
 import lk.quontacom.task.ers.exception.ERSException;
 import lk.quontacom.task.ers.model.dto.response.EmployeeRespDto;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,5 +14,6 @@ public interface EmployeeService {
     void deleteEmployeeById(String employeeId) throws ERSException;
     EmployeeRespDto editEmployeeById(String employeeId , EmployeeReqDto employeeReqDto) throws ERSException;
 
-
+    String uploadProfilePic(String id, MultipartFile file) throws ERSException;
+    byte[] downloadProfilePic(String id);
 }
