@@ -13,6 +13,8 @@ import lk.quontacom.task.util.CommonUtil;
 import lk.quontacom.task.util.enums.Gender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@EnableScheduling
 public class EmployeeServiceImpl implements EmployeeService {
 
         private final EmployeeRepository employeeRepository;
@@ -53,7 +56,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setBirthday(commonUtil.convertStringToDateTime(employeeReqDto.getBirthday()));
             employee.setHired_date(commonUtil.convertStringToDateTime(employeeReqDto.getHired_date()));
             employee.setUser_id(user);
-            //calculate age;
+            updateCurrentAgeInDays(employee);
             log.info("Successfully created Employee");
 
 
@@ -117,6 +120,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 employee.setBirthday(commonUtil.convertStringToDateTime(employeeReqDto.getBirthday()));
                 employee.setHired_date(commonUtil.convertStringToDateTime(employeeReqDto.getHired_date()));
                 employee.setUser_id(user);
+                updateCurrentAgeInDays(employee);
                 log.info("Successfully updated Employee",employeeId);
             }else {
                 throw new ERSException(HttpStatus.BAD_REQUEST,
@@ -129,8 +133,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         return null;
     }
-    public long updateCurrentAgeInDays(Employee employee){
-        return ChronoUnit.DAYS.between(employee.getBirthday().toLocalDate(), LocalDate.now());
+    @Scheduled(cron = "0 0 0 * * ?")
+    private void getEmployeeListForAgeUpdate(){
+        log.debug("getEmployeeListForAgeUpdate method started");
+        List<Employee> employees = employeeRepository.findAll();
+        for (Employee employee: employees) {updateCurrentAgeInDays(employee);}
+        log.info("Successfully updated employees Age : ",employees.size());
+
+
+    }
+    private void updateCurrentAgeInDays(Employee employee){
+
+        employee.setCurrent_age_in_days(ChronoUnit.DAYS.between(employee.getBirthday().toLocalDate(), LocalDate.now()));
 
     }
     private EmployeeRespDto employeeToRespDto(Employee employee) {

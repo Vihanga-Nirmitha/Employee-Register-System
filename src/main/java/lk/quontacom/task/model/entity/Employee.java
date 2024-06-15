@@ -29,7 +29,6 @@ public class Employee extends AbstractEntity{
     private LocalDateTime birthday;
     @Column(nullable = false)
     private LocalDateTime hired_date;
-    @Column(nullable = false)
     private long current_age_in_days;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
