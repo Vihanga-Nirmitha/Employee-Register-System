@@ -1,13 +1,21 @@
 package lk.quontacom.task.ers.util;
 
 import io.micrometer.common.util.StringUtils;
+import lk.quontacom.task.ers.exception.ERSException;
+import lk.quontacom.task.ers.model.dto.report.EmployeeReport;
 import lk.quontacom.task.ers.model.entity.Role;
 import lk.quontacom.task.ers.util.enums.Gender;
 import lk.quontacom.task.ers.util.enums.RoleType;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jasperreports.engine.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -44,5 +52,19 @@ public class CommonUtil {
         return roleStr;
     }
 
+    public void employeeReportGenerate(List<EmployeeReport> employeeReportList) throws JRException {
+
+
+        try {
+            String reportPath = "src/main/resources/Employee Details Report.jasper";
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(employeeReportList);
+            Map<String, Object> parameters = new HashMap<>();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(reportPath, parameters, dataSource);
+            JasperExportManager.exportReportToPdfFile(jasperPrint, "EmployeeReport.pdf");
+            log.info("Report created successfully");
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

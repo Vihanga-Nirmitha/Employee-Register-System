@@ -7,6 +7,7 @@ import lk.quontacom.task.ers.exception.ERSException;
 import lk.quontacom.task.ers.model.dto.response.EmployeeRespDto;
 import lk.quontacom.task.ers.service.authentication.AuthService;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +69,12 @@ public class EmployeeController {
     @GetMapping("/{id}/downloadProfilePicture")
     public ResponseEntity<byte[]> downloadProfilePic(@PathVariable("id") String employeeId) throws ERSException {
         return new ResponseEntity<>(employeeService.downloadProfilePic(employeeId),HttpStatus.OK);
+    }
+    @PostMapping("/report")
+    public ResponseEntity<Void> getEmployeeReport() throws ERSException, JRException {
+        log.info("Received request to get employee report");
+        employeeService.getEmployeeReport();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

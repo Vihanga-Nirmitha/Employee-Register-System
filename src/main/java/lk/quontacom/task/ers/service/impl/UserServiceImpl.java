@@ -2,7 +2,9 @@ package lk.quontacom.task.ers.service.impl;
 
 import lk.quontacom.task.ers.exception.ERSException;
 import lk.quontacom.task.ers.model.Repository.UserRepository;
+import lk.quontacom.task.ers.model.dto.response.EmployeeRespDto;
 import lk.quontacom.task.ers.model.dto.response.UserRespDto;
+import lk.quontacom.task.ers.model.entity.Employee;
 import lk.quontacom.task.ers.model.entity.User;
 import lk.quontacom.task.ers.model.dto.request.UserReqDto;
 import lk.quontacom.task.ers.service.UserService;
@@ -36,6 +38,8 @@ public class UserServiceImpl implements UserService {
     public List<UserReqDto> getAllUsers() {
         return null;
     }
+
+
 
     @Override
     public UserRespDto getUserById(String userId) throws ERSException {

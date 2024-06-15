@@ -2,6 +2,7 @@ package lk.quontacom.task.ers.service.impl;
 
 import lk.quontacom.task.ers.model.Repository.EmployeeRepository;
 import lk.quontacom.task.ers.model.Repository.UserRepository;
+import lk.quontacom.task.ers.model.dto.report.EmployeeReport;
 import lk.quontacom.task.ers.model.dto.request.EmployeeReqDto;
 import lk.quontacom.task.ers.util.CommonUtil;
 import lk.quontacom.task.ers.exception.ERSException;
@@ -12,6 +13,7 @@ import lk.quontacom.task.ers.service.EmployeeService;
 import lk.quontacom.task.ers.service.UserService;
 import lk.quontacom.task.ers.util.enums.RoleType;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -21,12 +23,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -223,6 +226,30 @@ public class EmployeeServiceImpl implements EmployeeService {
                     "Employee does not exist with the user id", "Employee does not exist with the user id:" +id);
         }
     }
+    @Override
+    public Void getEmployeeReport() throws ERSException, JRException {
+        log.debug("getEmployeeReport method started");
+        List<Employee> employees = employeeRepository.findAll();
+        List<EmployeeReport> employeeReportlist = new ArrayList<>();
+        for (Employee employee : employees) {
+            EmployeeReport employeeReport = convertEmployeeToEmployeeReport(employee);
+            employeeReportlist.add(employeeReport);
+        }
+        log.info("Successfully fetched employee list of size : ",employeeReportlist.size());
+        commonUtil.employeeReportGenerate(employeeReportlist);
 
+        return null;
+    }
+    private EmployeeReport convertEmployeeToEmployeeReport(Employee employee) throws ERSException {
+        EmployeeReport employeeReport = new EmployeeReport(
+                Math.toIntExact((employee.getId())),
+                (employee.getFirst_name()+" "+employee.getLast_name()),
+                (int)employee.getCurrent_age_in_days(),
+                String.valueOf(commonUtil.convertgenderToString(employee.getGender())),
+                Date.valueOf(employee.getHired_date().toLocalDate())
+        );
+        return employeeReport;
+
+    }
 
 }

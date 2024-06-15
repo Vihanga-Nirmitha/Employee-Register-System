@@ -10,8 +10,10 @@ import java.util.List;
 public interface UserService {
     void createUser(UserReqDto userReqDto) throws ERSException;
     List<UserReqDto> getAllUsers();
+
     UserRespDto getUserById(String userId) throws ERSException;
     UserRespDto deleteUserById(String userId) throws ERSException;
     UserRespDto editUserById(String userId , UserReqDto userReqDto) throws ERSException;
     User findById(String id) throws ERSException;
+
 }

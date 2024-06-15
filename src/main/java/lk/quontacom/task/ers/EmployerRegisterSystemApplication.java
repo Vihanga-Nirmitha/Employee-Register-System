@@ -2,6 +2,8 @@ package lk.quontacom.task.ers;
 
 import lk.quontacom.task.ers.controller.UserController;
 import lk.quontacom.task.ers.model.Repository.UserRepository;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -14,8 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class EmployerRegisterSystemApplication {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws JRException {
 		SpringApplication.run(EmployerRegisterSystemApplication.class, args);
+
 	}
 
 

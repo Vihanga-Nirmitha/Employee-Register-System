@@ -8,6 +8,7 @@ import lk.quontacom.task.ers.model.dto.response.AuthResp;
 import lk.quontacom.task.ers.model.dto.response.UserRespDto;
 import lk.quontacom.task.ers.service.UserService;
 import lk.quontacom.task.ers.service.authentication.AuthService;
+import lk.quontacom.task.ers.util.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,10 +23,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+
     private  final AuthService authService;
 @Autowired
     public UserController(UserService userService, AuthService authService) {
         this.userService = userService;
+
     this.authService = authService;
 }
     @PostMapping
@@ -45,6 +48,8 @@ public class UserController {
         userService.getUserById(userId);
         return new ResponseEntity<UserRespDto>(HttpStatus.OK);
     }
+
+
     @GetMapping
     public ResponseEntity<List<UserRespDto>> getAllUsers() throws ERSException{
         log.info("Received request to get all Users");
